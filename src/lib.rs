@@ -129,6 +129,7 @@ pub use config::{LibDir, Display, ColorBits, DepthBits, WindowConfig};
 
 use shared_library::dynamic_library::DynamicLibrary;
 
+#[derive(Debug)]
 pub enum BackendCreationError {
     CreationError(Error),
     IncompatibleOpenGl(glium::IncompatibleOpenGl),
