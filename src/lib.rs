@@ -292,14 +292,14 @@ impl<S> Window<S> where S: Deref<Target=System> {
 						ffi::EGL_NONE as ffi::EGLint,
 					];
 					let mut attribute_list_size = 9;
-					match config.alpha.as_ref() {
+					/*match config.alpha.as_ref() {
 						Some(alpha) => {
 							attribute_list[attribute_list_size + 0] = ffi::EGL_ALPHA_SIZE as ffi::EGLint;
 							attribute_list[attribute_list_size + 1] = alpha.0 as ffi::EGLint;
 							attribute_list_size += 2;
 						},
 						None => {},
-					}
+					}*/
 					match config.depth.as_ref() {
 						Some(depth) => {
 							attribute_list[attribute_list_size + 0] = ffi::EGL_DEPTH_SIZE as ffi::EGLint;
