@@ -129,6 +129,10 @@ pub use config::{LibDir, Display, ColorBits, DepthBits, WindowConfig};
 
 use shared_library::dynamic_library::DynamicLibrary;
 
+pub enum BackendCreationError {
+    CreationError(Error),
+    IncompatibleOpenGl(glium::IncompatibleOpenGl),
+}
 
 // System singleton guard (The system may be created just once during the whole lifetime of the process).
 static SYSTEM_SINGLETON_GUARD: AtomicBool = ATOMIC_BOOL_INIT;
@@ -428,8 +432,8 @@ unsafe impl<S> glium::backend::Backend for Window<S> where S: Deref<Target=Syste
 	}
 }
 /// Creates a new glium facade.
-pub fn create_window_facade(system: &Arc<System>, config: &WindowConfig) -> Result<Rc<glium::backend::Context>, glium::GliumCreationError<Error>> {
-	let window = Rc::new(try!(Window::new(system.clone(), config).map_err(|e| { glium::GliumCreationError::BackendCreationError(e) })));
-	unsafe { glium::backend::Context::new::<Rc<Window<Arc<System>>>, Error>(window, true, Default::default()) }
+pub fn create_window_facade(system: &Arc<System>, config: &WindowConfig) -> Result<Rc<glium::backend::Context>, BackendCreationError> {
+	let window = Rc::new(try!(Window::new(system.clone(), config).map_err(|e| { BackendCreationError::CreationError(e) })));
+	unsafe { glium::backend::Context::new::<Rc<Window<Arc<System>>>>(window, true, Default::default()).map_err(|e| BackendCreationError::IncompatibleOpenGl(e)) }
 }
 
